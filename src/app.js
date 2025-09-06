@@ -15,4 +15,13 @@ app.use(express.static("public")) // for serving static files like images, pdf, 
 app.use(cookieParser())
 
 
+// routes
+import userRouter from './routes/user.routes.js'
+
+
+// routes declaration
+app.use("/api/v1/users", userRouter)
+// the above line means ki jab bhi koi request /users pe aayegi to control userRouter ke paas jayega
+// url will be like: http://localhost:8000/api/v1/users/register here     /register is handled in userRouter
+
 export { app }; 
