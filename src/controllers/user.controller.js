@@ -17,7 +17,9 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // step 1 getting user details
     const {username, email, fullname, password} = req.body
-    console.log("email: ",email);
+    // console.log("email: ",email);
+    // console.log("Body :  ", req.body);
+
     // validation 
     if(
         [fullname, email, username, password].some( (field) => 
@@ -28,7 +30,7 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 
     // check if user already exists
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $and: [
             { email },
             { username }
@@ -42,11 +44,16 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // step 3 - handle file uploads
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
 
     // printing local paths of uploaded files just for my  reference
-    console.log("avatarLocalPath: ", avatarLocalPath);
-    console.log("coverImageLocalPath: ", coverImageLocalPath);
+            // console.log("avatarLocalPath: ", avatarLocalPath);
+            // console.log("coverImageLocalPath: ", coverImageLocalPath);
 
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar is required")
@@ -54,12 +61,12 @@ const registerUser = asyncHandler( async (req, res) => {
 
 
     // step 4 - upload files on cloudinary
-    const avatar = await uloaddOnCloudinary(avatarLocalPath)
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     // print the urls just for my reference
-    console.log("avatar url: ", avatar);
-    console.log("coverImage url: ", coverImage);
+            // console.log("avatar url: ", avatar);
+            // console.log("coverImage url: ", coverImage);
 
     if(!avatar){
         throw new ApiError(400, "Avatar is required")
