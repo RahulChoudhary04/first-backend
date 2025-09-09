@@ -1,3 +1,4 @@
+// Multer middleware for handling file uploads, storing files in './public/temp' with original names.
 import multer from "multer";
 
 const storage = multer.diskStorage({
