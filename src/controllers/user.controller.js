@@ -4,6 +4,23 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 
+// method to generate access token and refresh token
+const generateAccessTokenandRefreshToken = async (userId) => {
+    try {
+        const user = await User.findById(userId)
+        const accesstoken = user.generateAccessToken()
+        const refreshtoken = user.generateRefreshToken()
+
+        user.refreshtoken = refreshtoken
+        await user.save({validateBeforeSave: false})
+
+        return {accesstoken, refreshtoken}
+
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong, while generating refresh and access tokens")
+    }
+}
+
 const registerUser = asyncHandler( async (req, res) => {
     // get user details from frontend 
     // validation lagana padega to check not empty
@@ -129,6 +146,8 @@ const loginUser = asyncHandler( async (req, res) => {
     if(!isPasswordValid){
         throw new ApiError(401, "Incorrect password")
     }
+
+    // if password valid -> generate access token and refresh token
 
 })
 
