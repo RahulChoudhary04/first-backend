@@ -96,6 +96,44 @@ const registerUser = asyncHandler( async (req, res) => {
 
 })
 
+const loginUser = asyncHandler( async (req, res) => {
+    // req body -> data
+    // username or email
+    // find user based on username or email
+    // if user not found -> error
+    // if user found -> compare password
+    // access token and refresh token generate
+    // send cookie 
 
+    // taking data from req body
+    const {username, email, password} = req.body
+    // making check if any one of them is present or not
+    if(!username || !email){
+        throw new ApiError(400, "Username or email is required")
+    }
 
-export {registerUser};
+    // finding user based on username or email
+    const user = await User.findOne({
+        $or: [{ username}, {email}]
+    })
+
+    // if user not found
+    if(!user){
+        throw new ApiError(404, "User does not exist")
+    }
+
+    // if user found -> compare password
+    const isPasswordValid = await user.isPasswordCorrect(password)
+
+    // if password not valid
+    if(!isPasswordValid){
+        throw new ApiError(401, "Incorrect password")
+    }
+
+})
+
+export {
+    registerUser,
+    loginUser
+
+};
