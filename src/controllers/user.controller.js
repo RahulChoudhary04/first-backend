@@ -203,6 +203,7 @@ const logoutUser = asyncHandler( async (req, res) => {
     )
 })
 
+// exporting all methods
 export {
     registerUser,
     loginUser,
