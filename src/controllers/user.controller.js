@@ -113,6 +113,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
 })
 
+// The following function handles user login, including authentication and token generation.
 const loginUser = asyncHandler( async (req, res) => {
     // req body -> data
     // username or email
