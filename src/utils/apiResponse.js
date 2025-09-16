@@ -1,3 +1,4 @@
+// This is a custom response class for standardizing API responses.
 class ApiResponse{
     constructor(statusCode, data, message = "Success"){
         this.statusCode = statusCode;
